@@ -74,6 +74,15 @@ Esta separação é deliberada, permanente e inviolável.
 Uma auditoria bem-sucedida satisfaz todos os critérios abaixo:
 
 - [ ] sumario.md lido como fonte de verdade — lista completa de repositórios ativos extraída
+> ⚠️ **PRINCÍPIO DE VERSIONAMENTO INDEPENDENTE:**
+> Cada documento versiona a si mesmo — versões NÃO precisam coincidir entre
+> documentos de um mesmo repositório. CONTEXTO.md v3.3, sumario.md v2.6 e
+> README.md v0.25 podem coexistir no mesmo repositório sem inconsistência.
+> O que verificar: (1) o documento declara uma versão? (2) essa versão tem
+> entrada no backlog? A única exceção é o README.md de cada repositório,
+> que deve declarar a versão do repositório como unidade — alinhada ao
+> que o sumario.md registra para aquele repositório.
+
 - [ ] Camada 1 (versões) verificada para todos os repositórios ativos
 - [ ] Camada 2 (arquivos obrigatórios) verificada por tipo de repositório
 - [ ] Camada 3 (hub-entrada) verificada contra sumario.md
