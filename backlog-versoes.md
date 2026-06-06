@@ -1,5 +1,27 @@
 # Backlog de Versões — wkf-auditoria-consistencia
 
+## v1.2 — 2026-06-06
+
+**Tipo de alteração:** Melhoria
+**Autorizado por:** victorarimatea
+**Exposição de motivos:** A Camada 1 do W05 estava gerando falsos positivos
+ao comparar versões entre documentos de um mesmo repositório. O princípio
+correto é que cada documento versiona a si mesmo — versões diferentes entre
+CONTEXTO.md, sumario.md e README.md do mesmo repositório não são inconsistência.
+O W05 deve verificar rastreabilidade (versão declarada + entrada no backlog),
+não uniformidade de versões. A única exceção é o README.md, que deve declarar
+a versão do repositório como unidade alinhada ao sumario.md.
+
+**Causa raiz:** critério de verificação mal especificado na Camada 1 desde
+a criação do W05. Identificado após auditoria de fechamento de sessão em
+2026-06-06 retornar falso positivo sobre hub-fonte.
+
+### Alterações realizadas
+- `WORKFLOW.md` v1.1 → v1.2: Camada 1 atualizada com princípio de
+  versionamento independente e critério correto de verificação
+
+---
+
 ## v1.1 — 2026-06-06
 
 **Tipo de alteração:** Melhoria
