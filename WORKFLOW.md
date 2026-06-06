@@ -1,6 +1,6 @@
 # WORKFLOW.md — Auditoria de Consistência do Ecossistema
 
-**Versão:** v1.0 — 2026-06-05
+**Versão:** v1.1 — 2026-06-06
 **Status:** ativo
 **Responsável:** Victor Leonardo Arimatea Queiroz — Diretor de Transformação Digital
 **Repositório:** wkf-auditoria-consistencia (W05)
@@ -109,6 +109,15 @@ Ler o `sumario.md` do hub-fonte via web_fetch:
 ```
 GET https://raw.githubusercontent.com/victorarimatea/hub-fonte/main/sumario.md
 ```
+
+> ⚠️ **ALERTA DE CACHE — leitura da S04 obrigatoriamente via API:**
+> O `raw.githubusercontent.com` possui cache de CDN com delay indeterminado.
+> Leituras da `skl-github-orquestracao/SKILL.md` via raw podem retornar versões
+> desatualizadas sem aviso. Para garantir leitura da versão atual da S04,
+> use **sempre** a API GitHub:
+> `GET https://api.github.com/repos/victorarimatea/skl-github-orquestracao/contents/SKILL.md`
+> (decodificar campo `content` de base64). Este protocolo se aplica a qualquer
+> arquivo de instrução crítico lido no início de sessão.
 
 Extrair e registrar internamente:
 - Lista completa de repositórios ativos com ID, nome, versão declarada e tipo (M/S/D/W/A/P)
