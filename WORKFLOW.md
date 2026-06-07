@@ -114,10 +114,11 @@ Uma auditoria bem-sucedida satisfaz todos os critérios abaixo:
 ### Etapa 0 — Leitura da fonte de verdade
 
 **Instrução:**
-Ler o `sumario.md` do hub-fonte via web_fetch:
+Ler o `sumario.md` do hub-fonte via API GitHub (nunca raw — ver alerta de cache abaixo):
 ```
-GET https://raw.githubusercontent.com/victorarimatea/hub-fonte/main/sumario.md
+GET https://api.github.com/repos/victorarimatea/hub-fonte/contents/sumario.md
 ```
+(decodificar campo `content` de base64)
 
 > ⚠️ **ALERTA DE CACHE — leitura da S04 obrigatoriamente via API:**
 > O `raw.githubusercontent.com` possui cache de CDN com delay indeterminado.
