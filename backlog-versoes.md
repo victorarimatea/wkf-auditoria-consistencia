@@ -1,3 +1,24 @@
+## v1.2 — 2026-06-13 (correção pós-reauditoria)
+
+**Tipo de alteração:** Correção (OP-E) — mesma versão v1.2
+**Autorizado por:** Victor Leonardo Arimatea Queiroz
+**Detectado por:** reauditoria W05 independente de 2026-06-13
+
+**Exposição de motivos:** A reauditoria de fechamento (2026-06-13) — executada
+em chat separado, sem token — detectou uma divergência interna no próprio W05:
+o cabeçalho do WORKFLOW.md declarava v1.2, mas a tabela da Seção 1 ainda
+registrava v1.0 (versão de criação, nunca propagada). Mesma classe das
+correções D3 (W03) e da correção análoga do W06. Divergência pré-existente,
+não introduzida por esta sessão — exposta pela varredura geral. Nota: o
+instrumento de auditoria detectou uma inconsistência em si mesmo, o que valida
+a independência do processo.
+
+### Alterações realizadas
+- `WORKFLOW.md`: tabela da Seção 1, campo Versão v1.0 → v1.2 (alinhamento ao
+  cabeçalho, que já estava correto)
+
+---
+
 # Backlog de Versões — wkf-auditoria-consistencia
 
 ## v1.2 — 2026-06-06
