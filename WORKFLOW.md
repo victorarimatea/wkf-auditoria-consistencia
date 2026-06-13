@@ -13,7 +13,7 @@
 |---|---|
 | Nome do processo | Auditoria de Consistência do Ecossistema |
 | ID | W05 |
-| Versão | v1.0 |
+| Versão | v1.2 |
 | Status | ativo |
 | Data de criação | 2026-06-05 |
 | Responsável | DTD/SETIS/SES-DF |
