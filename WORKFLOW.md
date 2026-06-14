@@ -1,6 +1,6 @@
 # WORKFLOW.md — Auditoria de Consistência do Ecossistema
 
-**Versão:** v1.2 — 2026-06-06
+**Versão:** v1.3 — 2026-06-14
 **Status:** ativo
 **Responsável:** Victor Leonardo Arimatea Queiroz — Diretor de Transformação Digital
 **Repositório:** wkf-auditoria-consistencia (W05)
@@ -13,7 +13,7 @@
 |---|---|
 | Nome do processo | Auditoria de Consistência do Ecossistema |
 | ID | W05 |
-| Versão | v1.2 |
+| Versão | v1.3 |
 | Status | ativo |
 | Data de criação | 2026-06-05 |
 | Responsável | DTD/SETIS/SES-DF |
@@ -47,17 +47,19 @@ após. O viés de confirmação estrutural tornava invisíveis exatamente os
 erros mais comuns — omissões e propagações incompletas de versão.
 
 O W05 é a resposta estrutural a esse gap: um processo separado, com lógica
-própria, acionado antes de qualquer operação, sem acesso a token e sem
+própria, acionado antes de qualquer operação, sem token de edição e sem
 capacidade de alterar repositórios. Sua única saída é um relatório.
 
 ### Princípio de design — Separação executor/auditor
 
-O W05 **nunca** solicita token. **Nunca** altera arquivos. **Nunca** é
-executado pelo mesmo agente no mesmo fluxo que vai corrigir as divergências.
+O W05 opera **exclusivamente sob o token de leitura ampla** da doutrina de
+dois tokens (ver `hub-entrada/PROTOCOLO-SESSAO.md`, Modo 2). **Nunca** recebe
+o token de edição. **Nunca** altera arquivos. **Nunca** é executado pelo mesmo
+agente no mesmo fluxo que vai corrigir as divergências.
 
 Se o W05 encontrar divergências, o relatório é apresentado ao mantenedor.
 A decisão de corrigir e a execução da correção são responsabilidade de
-uma nova operação da S04, com plano e aprovação explícita.
+uma nova operação da S04 (sessão executora, token de edição), com plano e aprovação explícita.
 
 Esta separação é deliberada, permanente e inviolável.
 
@@ -99,7 +101,7 @@ Uma auditoria bem-sucedida satisfaz todos os critérios abaixo:
 
 | # | Etapa | Executor | Tipo | Entrada | Saída |
 |---|---|---|---|---|---|
-| 0 | Leitura da fonte de verdade | Claude | Automático | sumario.md via web_fetch | Lista de todos os repositórios ativos com versões declaradas |
+| 0 | Leitura da fonte de verdade | Claude | Automático | sumario.md via API GitHub (token de leitura) | Lista de todos os repositórios ativos com versões declaradas |
 | 1 | Auditoria Camada 1 — Versões | Claude | Automático | Lista do sumario.md + cabeçalhos dos arquivos principais | Lista de divergências de versão |
 | 2 | Auditoria Camada 2 — Arquivos obrigatórios | Claude | Automático | Lista do sumario.md + listagem de arquivos de cada repositório | Lista de arquivos ausentes |
 | 3 | Auditoria Camada 3 — hub-entrada | Claude | Automático | sumario.md + README.md e ROADMAP.md do hub-entrada | Lista de repositórios ausentes no hub-entrada |
@@ -107,27 +109,29 @@ Uma auditoria bem-sucedida satisfaz todos os critérios abaixo:
 | 5 | Auditoria Camada 5 — Glossário | Claude | Semi-automático | Arquivos operacionais centrais + GLOSSARIO.md | Lista de termos candidatos não definidos |
 | 6 | Produção do relatório | Claude | Automático | Resultados das Camadas 1–5 | Relatório de auditoria classificado por SEV |
 | 7 | Apresentação ao mantenedor | Claude | Manual | Relatório produzido | Decisão do mantenedor: corrigir agora, agendar ou aceitar |
-| 8 | Log de execução | Claude | Automático (com token) | Relatório aprovado | Arquivo em `execucoes/` |
+| 8 | Log de execução | Sessão executora (S04) | Em operação (token de edição) | Relatório W05 reincorporado | Arquivo em `execucoes/` |
 
 ---
 
 ### Etapa 0 — Leitura da fonte de verdade
 
 **Instrução:**
-Ler o `sumario.md` do hub-fonte via API GitHub (nunca raw — ver alerta de cache abaixo):
+Ler o `sumario.md` do hub-fonte via **API GitHub Contents, autenticada com o token de leitura ampla** (doutrina de dois tokens — ver `hub-entrada/PROTOCOLO-SESSAO.md`, Modo 2):
 ```
 GET https://api.github.com/repos/victorarimatea/hub-fonte/contents/sumario.md
 ```
 (decodificar campo `content` de base64)
 
-> ⚠️ **ALERTA DE CACHE — leitura da S04 obrigatoriamente via API:**
-> O `raw.githubusercontent.com` possui cache de CDN com delay indeterminado.
-> Leituras da `skl-github-orquestracao/SKILL.md` via raw podem retornar versões
-> desatualizadas sem aviso. Para garantir leitura da versão atual da S04,
-> use **sempre** a API GitHub:
-> `GET https://api.github.com/repos/victorarimatea/skl-github-orquestracao/contents/SKILL.md`
-> (decodificar campo `content` de base64). Este protocolo se aplica a qualquer
-> arquivo de instrução crítico lido no início de sessão.
+> ⚠️ **DOUTRINA DE ACESSO — auditoria sob token de leitura, via API:**
+> A auditoria opera exclusivamente via API Contents autenticada com o **token
+> de leitura ampla**: alcança repositórios privados (ex.: o handoff no
+> `hub-memoria`), eleva o teto para 5000 req/h e elimina o risco de SHA ou
+> conteúdo obsoleto por cache de CDN. O `raw.githubusercontent.com` está
+> **aposentado** como canal de sessão — permanece apenas como recurso público
+> externo de leitura tokenless de repositórios públicos, fora do rito de
+> auditoria. O W05 **nunca** recebe token de edição. Aplica-se a todo arquivo
+> de instrução crítico lido na auditoria (inclui
+> `skl-github-orquestracao/SKILL.md`).
 
 Extrair e registrar internamente:
 - Lista completa de repositórios ativos com ID, nome, versão declarada e tipo (M/S/D/W/A/P)
@@ -286,7 +290,14 @@ Apresentar o relatório e aguardar uma das três decisões:
 
 ---
 
-### Etapa 8 — Log de execução (quando com token ativo)
+### Etapa 8 — Log de execução (depositado pela sessão executora)
+
+**Quem deposita:** o log do W05 **não** é escrito pelo auditor — o auditor
+opera sob token de leitura e nunca escreve. O log é depositado pela **sessão
+executora** (Modo 1 / S04, token de edição) ao reincorporar o relatório W05,
+como parte dos registros da operação. Quando a auditoria for avulsa (sem
+correções subsequentes), o registro do ciclo vive no relatório de sessão
+(W03, Bloco II) e o depósito do log autônomo em `execucoes/` é opcional.
 
 **Localização:** `execucoes/AAAA-MM-DD-[contexto].md`
 
@@ -322,7 +333,7 @@ Apresentar o relatório e aguardar uma das três decisões:
 
 | Etapa | Estado atual | Condição para automação |
 |---|---|---|
-| 0 — Leitura sumario.md | Manual (web_fetch) | Já automatizável |
+| 0 — Leitura sumario.md | Manual (API, token de leitura) | Já automatizável |
 | 1 — Versões | Semi-automático | Automatizável via script Python com API GitHub |
 | 2 — Arquivos obrigatórios | Semi-automático | Automatizável via listagem da API |
 | 3 — hub-entrada | Semi-automático | Automatizável via comparação de listas |
