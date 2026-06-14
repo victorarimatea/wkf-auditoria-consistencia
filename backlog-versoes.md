@@ -1,3 +1,33 @@
+## v1.3 — 2026-06-14
+
+**Tipo de alteração:** Melhoria (OP-W)
+**Autorizado por:** Victor Leonardo Arimatea Queiroz
+**Status do workflow:** ativo
+**Execuções afetadas:** nenhuma
+**Skills afetadas:** nenhuma (alinha o W05 à doutrina já canônica no PROTOCOLO-SESSAO.md)
+
+**Exposição de motivos:** Propagação da doutrina de dois tokens ao W05,
+concluindo o item I1 do ROADMAP e fechando o SEV3 de acesso herdado. O W05
+ainda carregava o modelo de acesso anterior ("API vs raw" + alerta de cache)
+e uma contradição interna: a Seção 2 declarava "sem acesso a token" enquanto
+a Etapa 8 previa log "com token ativo". Sob a doutrina, o auditor opera
+exclusivamente com o token de leitura ampla e nunca recebe o token de edição.
+
+### Alterações realizadas
+- `WORKFLOW.md` v1.2 -> v1.3:
+  - Seção 2 (Princípio de design): auditor opera só sob token de leitura;
+    nunca recebe token de edição; correção é responsabilidade da sessão
+    executora. "sem acesso a token" -> "sem token de edição"
+  - Etapa 0: instrução e box reescritos de "API/raw + cache" para a doutrina
+    de dois tokens (token de leitura ampla; raw aposentado como canal de sessão)
+  - Etapa 8 (decisão do mantenedor, Opção A, 2026-06-14): log depositado pela
+    sessão executora (S04, token de edição), nunca pelo auditor; depósito
+    autônomo opcional quando a auditoria é avulsa
+  - Seção 4 (tabela) e Seção 7: web_fetch -> API com token de leitura
+  - Cabeçalho e Seção 1 (tabela): v1.2 -> v1.3
+
+---
+
 ## v1.2 — 2026-06-13 (correção pós-reauditoria)
 
 **Tipo de alteração:** Correção (OP-E) — mesma versão v1.2
