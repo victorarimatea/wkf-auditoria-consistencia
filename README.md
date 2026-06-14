@@ -1,7 +1,7 @@
 # wkf-auditoria-consistencia
 
 **Tipo:** Workflow (W05)
-**Versão:** v1.2 — 2026-06-06
+**Versão:** v1.3 — 2026-06-14
 **Status:** ativo
 **Repositório:** https://github.com/victorarimatea/wkf-auditoria-consistencia
 **Mantenedor:** victorarimatea
